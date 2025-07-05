@@ -429,6 +429,36 @@
             background-color: #2f855a;
         }
 
+        /* Новые стили для кнопки перемещения */
+        .btn-warning {
+            background-color: var(--warning);
+        }
+        
+        .btn-warning:hover {
+            background-color: #c05621;
+        }
+        
+        .move-case-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
+        .move-case-option {
+            padding: 10px;
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            transition: var(--transition);
+        }
+        
+        .move-case-option:hover {
+            background-color: var(--secondary);
+            color: white;
+        }
+
         /* Section Title */
         .section-title {
             text-align: center;
@@ -485,6 +515,10 @@
             
             .hero h2 {
                 font-size: 1.4rem;
+            }
+
+            .move-case-options {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
         
@@ -1037,7 +1071,7 @@
                 <a href="#" class="nav-link active" data-page="home">Главная</a>
                 <a href="#" class="nav-link" data-page="forum">Форум БВР</a>
                 <a href="#" class="nav-link" data-page="case-management">Управление Делами</a>
-                <a href="#" class="nav-link" data-page="users">Пользователи</a>
+                <a href="#" class="nav-link" data-page="users" style="display: none;">Пользователи</a>
                 <a href="#" class="nav-link" data-page="profile" style="display: none;">Профиль</a>
             </div>
             
@@ -1197,7 +1231,7 @@
                 </div>
                 
                 <!-- New Topic Form -->
-                <div class="case-form">
+                <div class="case-form" id="topicFormContainer">
                     <h2>Создать новую тему</h2>
                     <form id="topicForm">
                         <div class="form-group">
@@ -1235,7 +1269,7 @@
                 <h1 class="section-title">Управление Делами</h1>
                 
                 <div class="case-controls">
-                    <button class="btn" id="newCaseBtn"><i class="fas fa-plus"></i> Новое дело</button>
+                    <button class="btn" id="newCaseBtn" style="display: none;"><i class="fas fa-plus"></i> Новое дело</button>
                     <div class="case-filters">
                         <select id="caseStatusFilter">
                             <option value="all">Все статусы</option>
@@ -1306,7 +1340,7 @@
                 <h1 class="section-title">Управление Пользователями</h1>
                 
                 <div class="user-controls">
-                    <button class="btn" id="addUserBtn"><i class="fas fa-user-plus"></i> Добавить пользователя</button>
+                    <button class="btn" id="addUserBtn" style="display: none;"><i class="fas fa-user-plus"></i> Добавить пользователя</button>
                     <div class="user-filters">
                         <select id="userRoleFilter">
                             <option value="all">Все роли</option>
@@ -1607,6 +1641,32 @@
         </div>
     </div>
 
+    <!-- Move Case Modal -->
+    <div class="modal" id="moveCaseModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Переместить дело на форум</h2>
+            <form id="moveCaseForm">
+                <input type="hidden" id="moveCaseId">
+                <div class="form-group">
+                    <label>Выберите категорию:</label>
+                    <div class="move-case-options">
+                        <div class="move-case-option" data-category="current-investigations">Кейс-Файл › Текущие</div>
+                        <div class="move-case-option" data-category="employee-cases">Кейс-Файл › Дела сотрудников</div>
+                        <div class="move-case-option" data-category="disciplinary-investigations">Кейс-Файл › Дисциплинарные</div>
+                        <div class="move-case-option" data-category="current-decrees">Постановления › Текущие</div>
+                        <div class="move-case-option" data-category="disciplinary-measures">Постановления › Дисциплинарные</div>
+                        <div class="move-case-option" data-category="approved-decisions">Постановления › Решения</div>
+                        <div class="move-case-option" data-category="completed-investigations">Архив › Завершенные</div>
+                        <div class="move-case-option" data-category="suspended-investigations">Архив › Приостановленные</div>
+                        <div class="move-case-option" data-category="historical-investigations">Архив › Исторические</div>
+                    </div>
+                </div>
+                <button type="button" class="btn" id="confirmMoveBtn">Переместить</button>
+            </form>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer>
         <div class="footer-content">
@@ -1692,6 +1752,29 @@
             renderForumTopics();
             renderForumTabs();
             updateOnlineUsers();
+            updateGuestInterface();
+        }
+        
+        // Ограничения для гостей
+        function updateGuestInterface() {
+            if (!currentUser) {
+                // Скрываем элементы, недоступные гостям
+                document.querySelectorAll('.nav-link[data-page="users"]').forEach(el => {
+                    el.style.display = 'none';
+                });
+                document.querySelectorAll('.nav-link[data-page="profile"]').forEach(el => {
+                    el.style.display = 'none';
+                });
+                
+                // Скрываем форму создания тем на форуме
+                document.getElementById('topicFormContainer').style.display = 'none';
+                
+                // Скрываем кнопку создания дела
+                document.getElementById('newCaseBtn').style.display = 'none';
+                
+                // Скрываем кнопку добавления пользователя
+                document.getElementById('addUserBtn').style.display = 'none';
+            }
         }
         
         // Сохранение данных в localStorage
@@ -2068,6 +2151,23 @@
                 timelineContainer.appendChild(timelineItem);
             });
             
+            // Добавляем кнопку перемещения на форум (только для авторизованных)
+            const caseActions = document.querySelector('.case-actions');
+            if (currentUser) {
+                const moveButton = document.createElement('button');
+                moveButton.className = 'btn btn-sm btn-warning';
+                moveButton.id = 'moveToForumBtn';
+                moveButton.innerHTML = '<i class="fas fa-share"></i> Переместить на форум';
+                moveButton.dataset.caseId = caseId;
+                caseActions.appendChild(moveButton);
+                
+                // Обработчик для кнопки перемещения
+                document.getElementById('moveToForumBtn').addEventListener('click', () => {
+                    document.getElementById('moveCaseId').value = caseId;
+                    document.getElementById('moveCaseModal').classList.add('show');
+                });
+            }
+            
             // Сохраняем ID дела для формы
             document.getElementById('caseEntryForm').dataset.caseId = caseId;
             
@@ -2124,6 +2224,43 @@
                 renderForumTopics();
                 alert(`Тема перемещена в категорию: ${getCategoryName(newCategory)}`);
             }
+        }
+        
+        // Перемещение дела на форум
+        function moveCaseToForum(caseId, category) {
+            const caseItem = cases.find(c => c.id == caseId);
+            if (!caseItem) return;
+            
+            // Создаем тему форума на основе дела
+            const newTopic = {
+                id: forumTopics.length + 1,
+                title: `Дело #${caseItem.id}: ${caseItem.title}`,
+                author: currentUser?.fullname || 'Система',
+                date: new Date().toLocaleString('ru-RU', { 
+                    day: '2-digit', 
+                    month: '2-digit', 
+                    year: 'numeric', 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                }),
+                content: `Сотрудник: ${caseItem.employee}\nОписание: ${caseItem.description}\nСтатус: ${caseItem.status}`,
+                category: category,
+                status: 'open',
+                caseId: caseId  // Сохраняем связь с исходным делом
+            };
+            
+            forumTopics.push(newTopic);
+            saveForumTopics();
+            
+            // Удаляем дело (или помечаем как перемещенное)
+            cases = cases.filter(c => c.id != caseId);
+            saveCases();
+            
+            // Обновляем интерфейс
+            renderCases();
+            renderForumTopics();
+            
+            alert(`Дело успешно перемещено в категорию "${getCategoryName(category)}" на форуме!`);
         }
         
         // Получение названия категории
@@ -2415,6 +2552,9 @@
             } else if (pageId === 'forum') {
                 renderForumTopics();
                 renderForumTabs();
+                
+                // Для гостей скрываем форму создания тем
+                document.getElementById('topicFormContainer').style.display = currentUser ? 'block' : 'none';
             }
         }
         
@@ -2447,6 +2587,19 @@
                 el.style.display = 'block';
             });
             
+            // Показываем вкладку "Пользователи" только администраторам
+            const usersTab = document.querySelector('.nav-link[data-page="users"]');
+            if (hasPermission('admin')) {
+                usersTab.style.display = 'block';
+            } else {
+                usersTab.style.display = 'none';
+            }
+            
+            // Показываем кнопки создания для авторизованных пользователей
+            document.getElementById('topicFormContainer').style.display = 'block';
+            document.getElementById('newCaseBtn').style.display = hasPermission('moderator') ? 'block' : 'none';
+            document.getElementById('addUserBtn').style.display = hasPermission('admin') ? 'block' : 'none';
+            
             // Обновляем страницу профиля
             document.getElementById('profileUsername').value = user.username;
             document.getElementById('profileFullname').value = user.fullname;
@@ -2463,6 +2616,33 @@
             } else {
                 avatarPreview.innerHTML = `<div class="user-avatar">${firstLetters}</div>`;
             }
+        }
+        
+        // Сброс интерфейса для гостя
+        function resetToGuest() {
+            document.getElementById('userBtn').innerHTML = `
+                <div class="user-avatar">Г</div>
+                <span>Гость</span>
+            `;
+            
+            document.getElementById('loginBtn').style.display = 'block';
+            document.getElementById('registerBtn').style.display = 'block';
+            document.getElementById('profileBtn').style.display = 'none';
+            document.getElementById('settingsBtn').style.display = 'none';
+            document.getElementById('logoutBtn').style.display = 'none';
+            
+            // Скрываем вкладки профиля и пользователей
+            document.querySelectorAll('.nav-link[data-page="profile"]').forEach(el => {
+                el.style.display = 'none';
+            });
+            document.querySelectorAll('.nav-link[data-page="users"]').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Скрываем элементы для гостей
+            document.getElementById('topicFormContainer').style.display = 'none';
+            document.getElementById('newCaseBtn').style.display = 'none';
+            document.getElementById('addUserBtn').style.display = 'none';
         }
         
         // Инициализация приложения
@@ -2522,6 +2702,7 @@
             const loginModal = document.getElementById('loginModal');
             const registerModal = document.getElementById('registerModal');
             const editTopicModal = document.getElementById('editTopicModal');
+            const moveCaseModal = document.getElementById('moveCaseModal');
             const closeButtons = document.querySelectorAll('.close');
             
             // Login modal
@@ -2636,20 +2817,7 @@
                 saveCurrentUser();
                 
                 // Сбрасываем интерфейс
-                document.getElementById('userBtn').innerHTML = `
-                    <div class="user-avatar">Г</div>
-                    <span>Гость</span>
-                `;
-                
-                document.getElementById('loginBtn').style.display = 'block';
-                document.getElementById('registerBtn').style.display = 'block';
-                document.getElementById('profileBtn').style.display = 'none';
-                document.getElementById('settingsBtn').style.display = 'none';
-                document.getElementById('logoutBtn').style.display = 'none';
-                
-                document.querySelectorAll('.nav-link[data-page="profile"]').forEach(el => {
-                    el.style.display = 'none';
-                });
+                resetToGuest();
                 
                 // Обновляем список онлайн
                 updateOnlineUsers();
@@ -3019,6 +3187,32 @@
             
             // User search input
             document.getElementById('userSearch').addEventListener('input', renderUsers);
+            
+            // Обработчик для перемещения дела на форум
+            document.querySelectorAll('.move-case-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const caseId = document.getElementById('moveCaseId').value;
+                    const category = this.dataset.category;
+                    moveCaseToForum(caseId, category);
+                    document.getElementById('moveCaseModal').classList.remove('show');
+                });
+            });
+            
+            // Подтверждение перемещения дела
+            document.getElementById('confirmMoveBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                const caseId = document.getElementById('moveCaseId').value;
+                const selectedOption = document.querySelector('.move-case-option:hover');
+                
+                if (!selectedOption) {
+                    alert('Выберите категорию для перемещения!');
+                    return;
+                }
+                
+                const category = selectedOption.dataset.category;
+                moveCaseToForum(caseId, category);
+                document.getElementById('moveCaseModal').classList.remove('show');
+            });
             
             // Обновление активности каждую минуту
             setInterval(updateUserActivity, 60000);
