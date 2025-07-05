@@ -1622,7 +1622,7 @@
     </div>
 
     <script>
-        // Класс для пользователя с поддержкой аватара
+        // Класс для пользователя с поддержкой аватар
         class User {
             constructor(id, fullname, username, email, role, password, avatar = null) {
                 this.id = id;
@@ -1633,6 +1633,7 @@
                 this.password = password;
                 this.avatar = avatar;
                 this.lastActivity = new Date().toISOString();
+                this.isOnline = false; // Флаг онлайн статуса
             }
         }
 
@@ -1658,11 +1659,20 @@
             if (savedTopics) forumTopics = JSON.parse(savedTopics);
             if (savedEntries) caseEntries = JSON.parse(savedEntries);
             if (savedReplies) replies = JSON.parse(savedReplies);
-            if (savedCurrentUser) currentUser = JSON.parse(savedCurrentUser);
+            if (savedCurrentUser) {
+                currentUser = JSON.parse(savedCurrentUser);
+                
+                // Обновляем онлайн статус при загрузке
+                const user = users.find(u => u.id === currentUser.id);
+                if (user) {
+                    user.isOnline = true;
+                    user.lastActivity = new Date().toISOString();
+                }
+            }
             
             // Если нет пользователей, создаем начального админа
             if (users.length === 0) {
-                users.push(new User(
+                const admin = new User(
                     1,
                     'Администратор',
                     'admin',
@@ -1670,122 +1680,10 @@
                     'admin',
                     'admin123',
                     null
-                ));
+                );
+                admin.isOnline = false;
+                users.push(admin);
                 saveUsers();
-            }
-            
-            // Если нет дел, создаем демо-дела
-            if (cases.length === 0) {
-                cases.push(
-                    {
-                        id: 1,
-                        title: 'Дело #2025-001',
-                        employee: 'Иванов И.И.',
-                        description: 'Нарушение процедуры задержания',
-                        date: '01.07.2025',
-                        status: 'active',
-                        category: 'investigation',
-                        priority: 'medium',
-                        responsible: 'Петров П.П.'
-                    },
-                    {
-                        id: 2,
-                        title: 'Дело #2025-002',
-                        employee: 'Петров П.П.',
-                        description: 'Несвоевременное оформление документов',
-                        date: '03.07.2025',
-                        status: 'pending',
-                        category: 'disciplinary',
-                        priority: 'low',
-                        responsible: 'Сидорова А.А.'
-                    },
-                    {
-                        id: 3,
-                        title: 'Дело #2025-003',
-                        employee: 'Сидоров С.С.',
-                        description: 'Нарушение дресс-кода',
-                        date: '05.07.2025',
-                        status: 'closed',
-                        category: 'complaint',
-                        priority: 'low',
-                        responsible: 'Иванов И.И.'
-                    }
-                );
-                saveCases();
-            }
-            
-            // Если нет тем форума, создаем демо-темы
-            if (forumTopics.length === 0) {
-                forumTopics.push(
-                    {
-                        id: 1,
-                        title: 'Нарушение процедуры задержания - дело #2025-001',
-                        author: 'Иванов И.И.',
-                        date: '15.07.2025 14:30',
-                        content: 'Сотрудник: Петров П.П.\nОписание: Нарушение процедуры задержания при проведении спецоперации в центре города.\nСтатус: Активно',
-                        category: 'current-investigations',
-                        status: 'open'
-                    },
-                    {
-                        id: 2,
-                        title: 'Несвоевременное оформление документов - дело #2025-002',
-                        author: 'Сидорова А.А.',
-                        date: '14.07.2025 10:15',
-                        content: 'Сотрудник: Козлов Д.Д.\nОписание: Несвоевременное оформление протоколов задержания в течение 3 рабочих дней.\nСтатус: На рассмотрении',
-                        category: 'disciplinary-investigations',
-                        status: 'open'
-                    }
-                );
-                saveForumTopics();
-            }
-            
-            // Если нет записей в делах, создаем демо-записи
-            if (caseEntries.length === 0) {
-                caseEntries.push(
-                    {
-                        id: 1,
-                        caseId: 1,
-                        type: 'evidence',
-                        content: 'Видеозапись с камеры наблюдения: сотрудник превышает полномочия при задержании',
-                        date: '02.07.2025 10:30',
-                        author: 'Петров П.П.'
-                    },
-                    {
-                        id: 2,
-                        caseId: 1,
-                        type: 'witness',
-                        content: 'Показания свидетеля: сотрудник вел себя агрессивно и использовал ненормативную лексику',
-                        date: '03.07.2025 14:15',
-                        author: 'Сидорова А.А.'
-                    }
-                );
-                saveCaseEntries();
-            }
-            
-            // Если нет ответов на форуме, создаем демо-ответы
-            if (replies.length === 0) {
-                replies.push(
-                    {
-                        id: 1,
-                        topicId: 1,
-                        author: 'Петров П.П.',
-                        date: '15.07.2025 15:45',
-                        content: 'Прошу предоставить дополнительные материалы по делу для ознакомления.'
-                    },
-                    {
-                        id: 2,
-                        topicId: 1,
-                        author: 'Иванов И.И.',
-                        date: '15.07.2025 16:30',
-                        content: 'Все материалы будут предоставлены в течение рабочего дня.'
-                    }
-                );
-                saveReplies();
-            }
-            
-            // Обновляем интерфейс текущего пользователя
-            if (currentUser) {
-                updateUserInterface(currentUser);
             }
             
             // Отображаем данные
@@ -1827,7 +1725,17 @@
         function updateUserActivity() {
             if (currentUser) {
                 currentUser.lastActivity = new Date().toISOString();
+                currentUser.isOnline = true;
+                
+                // Обновляем статус в основном списке пользователей
+                const user = users.find(u => u.id === currentUser.id);
+                if (user) {
+                    user.lastActivity = currentUser.lastActivity;
+                    user.isOnline = true;
+                }
+                
                 saveCurrentUser();
+                saveUsers();
                 updateOnlineUsers();
             }
         }
@@ -1848,7 +1756,8 @@
                 const lastActive = new Date(user.lastActivity);
                 const minutesAgo = (now - lastActive) / (1000 * 60);
                 
-                if (minutesAgo < 5) { // Активен последние 5 минут
+                // Показываем только если пользователь онлайн И активен последние 5 минут
+                if (user.isOnline && minutesAgo < 5) {
                     count++;
                     const userElement = document.createElement('div');
                     userElement.className = 'online-user';
@@ -1986,7 +1895,7 @@
                     </div>
                     <div class="user-info">
                         <h3>${user.fullname} (${roleText})</h3>
-                        <p>Дата регистрации: ${user.date}</p>
+                        <p>${user.isOnline ? 'Онлайн' : 'Офлайн'}</p>
                     </div>
                     <div class="user-actions">
                         <button class="btn btn-sm edit-user" data-id="${user.id}"><i class="fas fa-edit"></i> Редактировать</button>
@@ -2293,9 +2202,19 @@
             }
             
             if (confirm('Вы уверены, что хотите удалить эту тему?')) {
+                // 1. Удаляем тему
                 forumTopics = forumTopics.filter(t => t.id != topicId);
+                
+                // 2. Удаляем все ответы в теме
+                replies = replies.filter(reply => reply.topicId != topicId);
+                
+                // 3. Сохраняем изменения
                 saveForumTopics();
+                saveReplies();
+                
+                // 4. Обновляем интерфейс
                 renderForumTopics();
+                
                 alert('Тема успешно удалена!');
             }
         }
@@ -2364,36 +2283,43 @@
             }
             
             if (confirm('Вы уверены, что хотите удалить это дело? Все связанные данные будут удалены безвозвратно.')) {
-                // Удаляем дело
+                // 1. Удаляем само дело
                 cases = cases.filter(c => c.id != id);
                 
-                // Удаляем все записи дела
+                // 2. Удаляем все записи дела
                 caseEntries = caseEntries.filter(entry => entry.caseId != id);
                 
-                // Удаляем все связанные темы форума
+                // 3. Удаляем все связанные темы форума
                 const relatedTopics = forumTopics.filter(topic => 
                     topic.title.includes(`дело #${id}`) || 
                     topic.content.includes(`дело #${id}`)
                 );
                 
                 relatedTopics.forEach(topic => {
-                    // Удаляем ответы в теме
+                    // 4. Удаляем ответы в теме
                     replies = replies.filter(reply => reply.topicId != topic.id);
-                    // Удаляем тему
-                    forumTopics = forumTopics.filter(t => t.id != topic.id);
                 });
                 
+                // 5. Удаляем сами темы
+                forumTopics = forumTopics.filter(topic => 
+                    !topic.title.includes(`дело #${id}`) && 
+                    !topic.content.includes(`дело #${id}`)
+                );
+                
+                // 6. Сохраняем ВСЕ изменения
                 saveCases();
                 saveCaseEntries();
                 saveForumTopics();
                 saveReplies();
+                
+                // 7. Обновляем интерфейс
                 renderCases();
                 renderForumTopics();
                 
                 alert('Дело и все связанные данные успешно удалены!');
             }
         }
-        
+
         // Редактирование пользователя
         function editUser(id) {
             if (!hasPermission('admin')) {
@@ -2637,6 +2563,7 @@
                 if (user) {
                     currentUser = user;
                     currentUser.lastActivity = new Date().toISOString();
+                    currentUser.isOnline = true;
                     
                     // Update user interface
                     updateUserInterface(currentUser);
@@ -2676,6 +2603,7 @@
                     'user',
                     password
                 );
+                newUser.isOnline = true;
                 
                 users.push(newUser);
                 saveUsers();
@@ -2694,28 +2622,39 @@
             // Logout functionality
             document.getElementById('logoutBtn').addEventListener('click', (e) => {
                 e.preventDefault();
+                
+                if (currentUser) {
+                    // Помечаем пользователя как оффлайн
+                    const userIndex = users.findIndex(u => u.id === currentUser.id);
+                    if (userIndex !== -1) {
+                        users[userIndex].isOnline = false;
+                        saveUsers();
+                    }
+                }
+                
                 currentUser = null;
                 saveCurrentUser();
                 
-                // Reset user interface
+                // Сбрасываем интерфейс
                 document.getElementById('userBtn').innerHTML = `
                     <div class="user-avatar">Г</div>
                     <span>Гость</span>
                 `;
                 
-                // Reset dropdown menu
                 document.getElementById('loginBtn').style.display = 'block';
                 document.getElementById('registerBtn').style.display = 'block';
                 document.getElementById('profileBtn').style.display = 'none';
                 document.getElementById('settingsBtn').style.display = 'none';
                 document.getElementById('logoutBtn').style.display = 'none';
                 
-                // Hide profile link in navigation
                 document.querySelectorAll('.nav-link[data-page="profile"]').forEach(el => {
                     el.style.display = 'none';
                 });
                 
-                // Go to home page
+                // Обновляем список онлайн
+                updateOnlineUsers();
+                
+                // Переходим на главную
                 showPage('home');
                 
                 alert('Вы успешно вышли из системы');
@@ -2919,6 +2858,7 @@
                         role,
                         password
                     );
+                    newUser.isOnline = false;
                     users.push(newUser);
                 }
                 
@@ -3081,7 +3021,10 @@
             document.getElementById('userSearch').addEventListener('input', renderUsers);
             
             // Обновление активности каждую минуту
-            setInterval(updateOnlineUsers, 60000);
+            setInterval(updateUserActivity, 60000);
+            
+            // Обновление списка онлайн каждые 30 секунд
+            setInterval(updateOnlineUsers, 30000);
             
             // Следим за активностью пользователя
             document.addEventListener('mousemove', updateUserActivity);
