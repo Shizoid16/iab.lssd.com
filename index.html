@@ -1,0 +1,2821 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бюро Внутренних Расследований</title>
+    <link rel="icon" href="https://www.upload.ee/image/18290652/logo-large.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a3a5f;
+            --secondary: #2c5282;
+            --accent: #e53e3e;
+            --light: #f7fafc;
+            --dark: #1a202c;
+            --gray: #718096;
+            --success: #38a169;
+            --warning: #dd6b20;
+            --danger: #e53e3e;
+            --header-height: 70px;
+            --footer-height: 60px;
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="light"] {
+            --bg: #f0f4f8;
+            --text: #1a202c;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --nav-bg: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --modal-bg: rgba(0, 0, 0, 0.5);
+        }
+
+        [data-theme="dark"] {
+            --bg: #1a202c;
+            --text: #f7fafc;
+            --card-bg: #2d3748;
+            --border: #4a5568;
+            --nav-bg: #1a202c;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --modal-bg: rgba(0, 0, 0, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--nav-bg);
+            border-bottom: 2px solid var(--accent);
+            height: var(--header-height);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            height: 100%;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo {
+            height: 40px;
+            width: auto;
+        }
+        
+        .logo img {
+            height: 40px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .brand {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-link {
+            padding: 8px 15px;
+            border-radius: 4px;
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 1.2rem;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-menu {
+            position: relative;
+        }
+
+        .user-btn {
+            background: none;
+            border: none;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 20px;
+            transition: var(--transition);
+        }
+
+        .user-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            box-shadow: var(--shadow);
+            min-width: 200px;
+            margin-top: 5px;
+            overflow: hidden;
+            display: none;
+            z-index: 10;
+        }
+
+        .dropdown.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 10px 15px;
+            color: var(--text);
+            text-decoration: none;
+            display: block;
+            transition: var(--transition);
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        /* Main Content Styles */
+        main {
+            flex: 1;
+            padding: 30px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .main-logo {
+            max-width: 300px;
+            margin: 0 auto 20px;
+            display: block;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+
+        .hero h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--text);
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--gray);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .resource-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+            cursor: pointer;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            border-color: var(--accent);
+        }
+
+        .resource-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+
+        .resource-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+
+        .resource-desc {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: var(--nav-bg);
+            border-top: 1px solid var(--border);
+            padding: 15px 20px;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .footer-logo {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .copyright {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--modal-bg);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 25px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            box-shadow: var(--shadow);
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: var(--accent);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background-color: var(--bg);
+            color: var(--text);
+            font-size: 1rem;
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.9rem;
+        }
+
+        .btn-accent {
+            background-color: var(--accent);
+        }
+
+        .btn-accent:hover {
+            background-color: #c53030;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background-color: #c53030;
+        }
+
+        .btn-success {
+            background-color: var(--success);
+        }
+
+        .btn-success:hover {
+            background-color: #2f855a;
+        }
+
+        /* Section Title */
+        .section-title {
+            text-align: center;
+            margin: 0 0 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--accent);
+            font-size: 2rem;
+        }
+
+        /* Page Content Styles */
+        .page-content {
+            display: none;
+        }
+        
+        .page-content.active {
+            display: block;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .resources-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .brand {
+                font-size: 1rem;
+            }
+            
+            .case-controls, .user-controls {
+                flex-direction: column;
+            }
+            
+            .case-filters, .user-filters {
+                width: 100%;
+            }
+            
+            .user-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .user-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .hero h2 {
+                font-size: 1.4rem;
+            }
+        }
+        
+        /* Forum Styles */
+        .forum-container {
+            padding: 20px;
+        }
+        
+        .forum-categories {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .forum-category {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .forum-category h2 {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .forum-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        
+        .forum-section {
+            background-color: var(--bg);
+            border-radius: 6px;
+            padding: 15px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            transition: var(--transition);
+            border: 1px solid var(--border);
+            cursor: pointer;
+        }
+        
+        .forum-section:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+        }
+        
+        .forum-section i {
+            font-size: 2rem;
+            color: var(--accent);
+        }
+        
+        /* Case Management Styles */
+        .case-management {
+            padding: 20px;
+        }
+        
+        .case-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .case-filters {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .cases-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        
+        .case-item {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .case-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .case-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+        
+        .case-status {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .case-status.active {
+            background-color: rgba(56, 161, 105, 0.2);
+            color: var(--success);
+        }
+        
+        .case-status.pending {
+            background-color: rgba(221, 107, 32, 0.2);
+            color: var(--warning);
+        }
+        
+        .case-status.closed {
+            background-color: rgba(66, 153, 225, 0.2);
+            color: #4299e1;
+        }
+        
+        .case-content p {
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .case-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+            flex-wrap: wrap;
+        }
+        
+        /* Users Management Styles */
+        .users-management {
+            padding: 20px;
+        }
+        
+        .user-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .user-filters {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .users-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .user-item {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .user-info {
+            flex: 1;
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        /* Profile Settings Styles */
+        .profile-settings {
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .settings-form {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+        }
+        
+        .avatar-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: var(--secondary);
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .avatar-preview:hover {
+            transform: scale(1.05);
+        }
+        
+        /* BBCode Editor */
+        .bbcode-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: var(--bg);
+            border-radius: 4px;
+        }
+        
+        .bbcode-btn {
+            padding: 6px 10px;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        /* Forum Topic Styles */
+        .topics-list {
+            margin-top: 20px;
+        }
+        
+        .topic-item {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--accent);
+            transition: all 0.3s ease;
+        }
+
+        .topic-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .topic-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .topic-author {
+            font-weight: bold;
+            color: var(--accent);
+        }
+        
+        .topic-date {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .topic-content {
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .topic-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        /* Move dropdown */
+        .move-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .move-options {
+            display: none;
+            position: absolute;
+            background-color: var(--card-bg);
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .move-options.show {
+            display: block;
+        }
+        
+        .move-option {
+            padding: 10px 15px;
+            display: block;
+            text-decoration: none;
+            color: var(--text);
+            cursor: pointer;
+        }
+        
+        .move-option:hover {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        /* Case Form */
+        .case-form {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            border-bottom: 2px solid var(--accent);
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Reply Styles */
+        .reply {
+            background-color: var(--bg);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            border-left: 3px solid var(--secondary);
+        }
+
+        .reply-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .reply-author {
+            font-weight: bold;
+            color: var(--text);
+        }
+
+        .reply-date {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .reply-content {
+            line-height: 1.6;
+        }
+
+        .reply-form {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Case Details */
+        .case-details {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .case-details-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .case-details-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .detail-item {
+            margin-bottom: 10px;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            padding: 8px;
+            background-color: var(--bg);
+            border-radius: 4px;
+        }
+
+        .case-timeline {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--accent);
+        }
+
+        .timeline-item:after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 17px;
+            bottom: -20px;
+            width: 2px;
+            background-color: var(--border);
+        }
+
+        .timeline-item:last-child:after {
+            display: none;
+        }
+
+        .timeline-date {
+            font-weight: bold;
+            color: var(--text);
+            margin-bottom: 5px;
+        }
+
+        .timeline-content {
+            background-color: var(--bg);
+            padding: 10px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Navigation -->
+    <header>
+        <div class="navbar">
+            <div class="logo-container">
+                <div class="logo">
+                    <img src="https://www.upload.ee/image/18290652/logo-large.png" alt="IAB Logo">
+                </div>
+                <div class="brand">Бюро Внутренних Расследований</div>
+            </div>
+            
+            <div class="nav-links">
+                <a href="#" class="nav-link active" data-page="home">Главная</a>
+                <a href="#" class="nav-link" data-page="forum">Форум БВР</a>
+                <a href="#" class="nav-link" data-page="case-management">Управление Делами</a>
+                <a href="#" class="nav-link" data-page="users">Пользователи</a>
+                <a href="#" class="nav-link" data-page="profile" style="display: none;">Профиль</a>
+            </div>
+            
+            <div class="nav-controls">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                
+                <div class="user-menu">
+                    <button class="user-btn" id="userBtn">
+                        <div class="user-avatar">Г</div>
+                        <span>Гость</span>
+                    </button>
+                    <div class="dropdown" id="userDropdown">
+                        <a href="#" class="dropdown-item" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Вход</a>
+                        <a href="#" class="dropdown-item" id="registerBtn"><i class="fas fa-user-plus"></i> Регистрация</a>
+                        <a href="#" class="dropdown-item" id="profileBtn" style="display: none;"><i class="fas fa-user"></i> Профиль</a>
+                        <a href="#" class="dropdown-item" id="settingsBtn" style="display: none;"><i class="fas fa-cog"></i> Настройки</a>
+                        <a href="#" class="dropdown-item" id="logoutBtn" style="display: none;"><i class="fas fa-sign-out-alt"></i> Выход</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Home Page -->
+        <div class="page-content active" id="home-page">
+            <div class="hero">
+                <div class="main-logo">
+                    <i class="fas fa-balance-scale" style="font-size: 120px; color: #e53e3e;"></i>
+                </div>
+                <h1>LOS SANTOS SHERIFF'S DEPARTMENT</h1>
+                <h2>INTERNAL AFFAIRS BUREAU</h2>
+                <p>Официальный портал доступа к документам и ресурсам для сотрудников Бюро Внутренних Расследований</p>
+            </div>
+
+            <h2 class="section-title">Ресурсы БВР</h2>
+            <div class="resources-grid">
+                <div class="resource-card" onclick="window.open('https://docs.google.com/document/d/1oNwcgX902Zh9iy9ZfoCXnQemDhZBsZtHd0tZ_c1bdkY/edit?tab=t.0#heading=h.5oulluxvv4j5', '_blank')">
+                    <div class="resource-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3 class="resource-title">Пособие IAB</h3>
+                    <p class="resource-desc">Основное руководство и процедуры Бюро Внутренних Расследований</p>
+                </div>
+                
+                <div class="resource-card" onclick="window.open('https://docs.google.com/document/d/1yV4TeyV04Gg5QCcwyMv9TaFEt6fPbW7Fd2IRiOkOweI/edit?tab=t.q52igi6pf1eq', '_blank')">
+                    <div class="resource-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3 class="resource-title">Приказы IAB</h3>
+                    <p class="resource-desc">Актуальные приказы и распоряжения руководства БВР</p>
+                </div>
+                
+                <div class="resource-card" onclick="window.open('https://docs.google.com/document/d/1UMbZJZiUbL6OUg8_9TuSyHjbzWzK6aEUXjxRyZH4d3w/edit?tab=t.0', '_blank')">
+                    <div class="resource-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3 class="resource-title">Пособие отделов IAB</h3>
+                    <p class="resource-desc">Руководства по работе структурных подразделений БВР</p>
+                </div>
+                
+                <div class="resource-card" onclick="window.open('https://docs.google.com/document/d/1QJ_Sp-XSzlXXILdmsaa5x7OhPvTZOOhRo--KboiDqRY/edit?tab=t.0', '_blank')">
+                    <div class="resource-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3 class="resource-title">Пособие криминалистики IAB</h3>
+                    <p class="resource-desc">Методики криминалистических исследований и экспертиз</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Forum Page -->
+        <div class="page-content" id="forum-page">
+            <div class="forum-container">
+                <h1 class="section-title">Форум Бюро Внутренних Расследований</h1>
+                
+                <!-- Tabs for Case Files, Decrees, Archives -->
+                <div class="tabs">
+                    <div class="tab active" data-tab="case-files">Кейс-Файл</div>
+                    <div class="tab" data-tab="decrees">Постановления</div>
+                    <div class="tab" data-tab="archives">Архивы</div>
+                </div>
+                
+                <!-- Case Files Tab -->
+                <div class="tab-content active" id="case-files-tab">
+                    <div class="forum-category">
+                        <h2>Текущие Расследования</h2>
+                        <div class="topics-list" id="current-investigations">
+                            <!-- Topics will be dynamically added here -->
+                        </div>
+                    </div>
+                    
+                    <div class="forum-category">
+                        <h2>Дела Сотрудников</h2>
+                        <div class="topics-list" id="employee-cases">
+                            <!-- Topics will be dynamically added here -->
+                        </div>
+                    </div>
+                    
+                    <div class="forum-category">
+                        <h2>Дисциплинарные Расследования</h2>
+                        <div class="topics-list" id="disciplinary-investigations">
+                            <!-- Topics will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Decrees Tab -->
+                <div class="tab-content" id="decrees-tab">
+                    <div class="forum-category">
+                        <h2>Текущие постановления</h2>
+                        <div class="topics-list" id="current-decrees">
+                            <!-- Topics will be dynamically added here -->
+                        </div>
+                    </div>
+                    
+                    <div class="forum-category">
+                        <h2>Дисциплинарные меры</h2>
+                        <div class="topics-list" id="disciplinary-measures">
+                            <!-- Topics will be dynamically added here -->
+                        </div>
+                    </div>
+                    
+                    <div class="forum-category">
+                        <h2>Утвержденные решения</h2>
+                        <div class="topics-list" id="approved-decisions">
+                            <!-- Topics will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Archives Tab -->
+                <div class="tab-content" id="archives-tab">
+                    <div class="forum-category">
+                        <h2>Завершенные Расследования</h2>
+                        <div class="topics-list" id="completed-investigations">
+                            <!-- Topics will be dynamically added here -->
+                        </div>
+                    </div>
+                    
+                    <div class="forum-category">
+                        <h2>Приостановленные Расследования</h2>
+                        <div class="topics-list" id="suspended-investigations">
+                            <!-- Topics will be dynamically added here -->
+                        </div>
+                    </div>
+                    
+                    <div class="forum-category">
+                        <h2>Исторические устаревшие Расследования</h2>
+                        <div class="topics-list" id="historical-investigations">
+                            <!-- Topics will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- New Topic Form -->
+                <div class="case-form">
+                    <h2>Создать новую тему</h2>
+                    <form id="topicForm">
+                        <div class="form-group">
+                            <label for="topicTitle">Заголовок темы:</label>
+                            <input type="text" id="topicTitle" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="topicCategory">Категория:</label>
+                            <select id="topicCategory" required>
+                                <option value="">Выберите категорию</option>
+                                <option value="current-investigations">Текущие Расследования</option>
+                                <option value="employee-cases">Дела Сотрудников</option>
+                                <option value="disciplinary-investigations">Дисциплинарные Расследования</option>
+                                <option value="current-decrees">Текущие постановления</option>
+                                <option value="disciplinary-measures">Дисциплинарные меры</option>
+                                <option value="approved-decisions">Утвержденные решения</option>
+                                <option value="completed-investigations">Завершенные Расследования</option>
+                                <option value="suspended-investigations">Приостановленные Расследования</option>
+                                <option value="historical-investigations">Исторические устаревшие Расследования</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="topicContent">Содержание:</label>
+                            <textarea id="topicContent" rows="10" required></textarea>
+                        </div>
+                        <button type="submit" class="btn">Создать тему</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Case Management Page -->
+        <div class="page-content" id="case-management-page">
+            <div class="case-management">
+                <h1 class="section-title">Управление Делами</h1>
+                
+                <div class="case-controls">
+                    <button class="btn" id="newCaseBtn"><i class="fas fa-plus"></i> Новое дело</button>
+                    <div class="case-filters">
+                        <select id="caseStatusFilter">
+                            <option value="all">Все статусы</option>
+                            <option value="active">Активные</option>
+                            <option value="pending">На рассмотрении</option>
+                            <option value="closed">Закрытые</option>
+                        </select>
+                        <input type="text" id="caseSearch" placeholder="Поиск по делам...">
+                    </div>
+                </div>
+                
+                <div class="cases-list" id="casesContainer">
+                    <!-- Cases will be dynamically added here -->
+                </div>
+                
+                <!-- Case Form -->
+                <div class="case-form" id="caseFormContainer" style="display: none;">
+                    <h2 id="caseFormTitle">Создать новое дело</h2>
+                    <form id="caseForm">
+                        <div class="form-group">
+                            <label for="caseTitle">Название дела:</label>
+                            <input type="text" id="caseTitle" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="caseEmployee">Сотрудник:</label>
+                            <input type="text" id="caseEmployee" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="caseDescription">Описание:</label>
+                            <textarea id="caseDescription" rows="4" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="caseCategory">Категория:</label>
+                            <select id="caseCategory" required>
+                                <option value="investigation">Расследование</option>
+                                <option value="disciplinary">Дисциплинарное дело</option>
+                                <option value="complaint">Жалоба</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="casePriority">Приоритет:</label>
+                            <select id="casePriority" required>
+                                <option value="high">Высокий</option>
+                                <option value="medium" selected>Средний</option>
+                                <option value="low">Низкий</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="caseStatus">Статус:</label>
+                            <select id="caseStatus" required>
+                                <option value="active">Активно</option>
+                                <option value="pending">На рассмотрении</option>
+                                <option value="closed">Закрыто</option>
+                            </select>
+                        </div>
+                        <div class="case-actions">
+                            <button type="submit" class="btn">Сохранить</button>
+                            <button type="button" class="btn btn-danger" id="cancelCaseBtn">Отмена</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Users Page -->
+        <div class="page-content" id="users-page">
+            <div class="users-management">
+                <h1 class="section-title">Управление Пользователями</h1>
+                
+                <div class="user-controls">
+                    <button class="btn" id="addUserBtn"><i class="fas fa-user-plus"></i> Добавить пользователя</button>
+                    <div class="user-filters">
+                        <select id="userRoleFilter">
+                            <option value="all">Все роли</option>
+                            <option value="owner">Владелец</option>
+                            <option value="admin">Администратор</option>
+                            <option value="moderator">Модератор</option>
+                            <option value="user">Пользователь</option>
+                        </select>
+                        <input type="text" id="userSearch" placeholder="Поиск пользователей...">
+                    </div>
+                </div>
+                
+                <div class="users-list" id="usersContainer">
+                    <!-- Users will be dynamically added here -->
+                </div>
+                
+                <!-- User Form -->
+                <div class="case-form" id="userFormContainer" style="display: none;">
+                    <h2 id="userFormTitle">Добавить пользователя</h2>
+                    <form id="userForm">
+                        <div class="form-group">
+                            <label for="userFullname">Полное имя:</label>
+                            <input type="text" id="userFullname" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="userLogin">Логин:</label>
+                            <input type="text" id="userLogin" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="userEmail">Email:</label>
+                            <input type="email" id="userEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="userRole">Роль:</label>
+                            <select id="userRole" required>
+                                <option value="owner">Владелец</option>
+                                <option value="admin">Администратор</option>
+                                <option value="moderator">Модератор</option>
+                                <option value="user">Пользователь</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="userPassword">Пароль:</label>
+                            <input type="password" id="userPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="userConfirmPassword">Подтвердите пароль:</label>
+                            <input type="password" id="userConfirmPassword" required>
+                        </div>
+                        <div class="case-actions">
+                            <button type="submit" class="btn">Сохранить</button>
+                            <button type="button" class="btn btn-danger" id="cancelUserBtn">Отмена</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Profile Page -->
+        <div class="page-content" id="profile-page">
+            <div class="profile-settings">
+                <h1 class="section-title">Настройки профиля</h1>
+                
+                <div class="settings-form">
+                    <div class="avatar-preview" id="avatarPreview">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    
+                    <form id="profileForm">
+                        <div class="form-group">
+                            <label for="profileUsername">Логин:</label>
+                            <input type="text" id="profileUsername" value="Гость" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="profileFullname">Полное имя:</label>
+                            <input type="text" id="profileFullname" placeholder="Введите ваше имя">
+                        </div>
+                        <div class="form-group">
+                            <label for="profileEmail">Email:</label>
+                            <input type="email" id="profileEmail" placeholder="Введите ваш email">
+                        </div>
+                        <div class="form-group">
+                            <label for="profileRole">Роль:</label>
+                            <input type="text" id="profileRole" value="Гость" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="profilePosition">Должность:</label>
+                            <input type="text" id="profilePosition" placeholder="Введите вашу должность">
+                        </div>
+                        <div class="form-group">
+                            <label for="profilePassword">Новый пароль:</label>
+                            <input type="password" id="profilePassword" placeholder="Введите новый пароль">
+                        </div>
+                        <div class="form-group">
+                            <label for="profileConfirmPassword">Подтвердите пароль:</label>
+                            <input type="password" id="profileConfirmPassword" placeholder="Повторите новый пароль">
+                        </div>
+                        <button type="submit" class="btn">Сохранить изменения</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Case Details Page -->
+        <div class="page-content" id="case-details-page">
+            <div class="case-management">
+                <div class="case-details">
+                    <div class="case-details-header">
+                        <h2 id="caseDetailsTitle">Дело #2025-001</h2>
+                        <div class="case-actions">
+                            <button class="btn btn-sm" id="editCaseBtn"><i class="fas fa-edit"></i> Редактировать</button>
+                            <button class="btn btn-sm btn-success" id="closeCaseBtn"><i class="fas fa-check-circle"></i> Закрыть дело</button>
+                            <button class="btn btn-sm btn-danger" id="deleteCaseBtn"><i class="fas fa-trash"></i> Удалить</button>
+                        </div>
+                    </div>
+                    
+                    <div class="case-details-content">
+                        <div>
+                            <div class="detail-item">
+                                <div class="detail-label">Сотрудник:</div>
+                                <div class="detail-value" id="caseDetailsEmployee">Иванов И.И.</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Дата открытия:</div>
+                                <div class="detail-value" id="caseDetailsDate">01.07.2025</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Категория:</div>
+                                <div class="detail-value" id="caseDetailsCategory">Расследование</div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="detail-item">
+                                <div class="detail-label">Статус:</div>
+                                <div class="detail-value" id="caseDetailsStatus"><span class="case-status active">Активно</span></div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Приоритет:</div>
+                                <div class="detail-value" id="caseDetailsPriority">Средний</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Ответственный:</div>
+                                <div class="detail-value" id="caseDetailsResponsible">Петров П.П.</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">Описание:</div>
+                        <div class="detail-value" id="caseDetailsDescription">Нарушение процедуры задержания при проведении спецоперации в центре города. Сотрудник превысил должностные полномочия.</div>
+                    </div>
+                    
+                    <div class="case-timeline">
+                        <h3>Хронология дела</h3>
+                        <div class="timeline" id="caseTimeline">
+                            <!-- Timeline items will be added here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="case-form">
+                    <h3>Добавить запись в дело</h3>
+                    <form id="caseEntryForm">
+                        <div class="form-group">
+                            <label for="entryType">Тип записи:</label>
+                            <select id="entryType" required>
+                                <option value="note">Заметка</option>
+                                <option value="evidence">Доказательство</option>
+                                <option value="witness">Показания свидетеля</option>
+                                <option value="decision">Решение</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="entryContent">Содержание:</label>
+                            <textarea id="entryContent" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn">Добавить запись</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Topic Details Page -->
+        <div class="page-content" id="topic-details-page">
+            <div class="forum-container">
+                <div class="case-details">
+                    <div class="case-details-header">
+                        <h2 id="topicDetailsTitle">Нарушение процедуры задержания - дело #2025-001</h2>
+                        <div class="case-actions">
+                            <button class="btn btn-sm" id="editTopicBtn"><i class="fas fa-edit"></i> Редактировать</button>
+                            <button class="btn btn-sm btn-success" id="closeTopicBtn"><i class="fas fa-check-circle"></i> Закрыть тему</button>
+                            <button class="btn btn-sm btn-danger" id="deleteTopicBtn"><i class="fas fa-trash"></i> Удалить</button>
+                        </div>
+                    </div>
+                    
+                    <div class="topic-item">
+                        <div class="topic-header">
+                            <div class="topic-author" id="topicAuthor">Иванов И.И.</div>
+                            <div class="topic-date" id="topicDate">15.07.2025 14:30</div>
+                        </div>
+                        <div class="topic-content" id="topicContentDetails">
+                            Сотрудник: Петров П.П.<br>
+                            Описание: Нарушение процедуры задержания при проведении спецоперации в центре города.<br>
+                            Статус: Активно
+                        </div>
+                    </div>
+                    
+                    <h3>Ответы</h3>
+                    <div class="replies-list" id="repliesContainer">
+                        <!-- Replies will be added here -->
+                    </div>
+                    
+                    <div class="reply-form">
+                        <form id="replyForm">
+                            <div class="form-group">
+                                <label for="replyContent">Ваш ответ:</label>
+                                <textarea id="replyContent" rows="4" required></textarea>
+                            </div>
+                            <button type="submit" class="btn">Отправить ответ</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Вход в систему</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginUsername">Логин:</label>
+                    <input type="text" id="loginUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Пароль:</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn">Войти</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Регистрация</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="regFullname">Полное имя:</label>
+                    <input type="text" id="regFullname" required>
+                </div>
+                <div class="form-group">
+                    <label for="regUsername">Логин:</label>
+                    <input type="text" id="regUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">Email:</label>
+                    <input type="email" id="regEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Пароль:</label>
+                    <input type="password" id="regPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="regConfirmPassword">Повторите пароль:</label>
+                    <input type="password" id="regConfirmPassword" required>
+                </div>
+                <button type="submit" class="btn">Зарегистрироваться</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Topic Modal -->
+    <div class="modal" id="editTopicModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Редактирование темы</h2>
+            <form id="editTopicForm">
+                <input type="hidden" id="editTopicId">
+                <div class="form-group">
+                    <label for="editTopicTitle">Заголовок темы:</label>
+                    <input type="text" id="editTopicTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="editTopicContent">Содержание:</label>
+                    <textarea id="editTopicContent" rows="10" required></textarea>
+                </div>
+                <button type="submit" class="btn">Сохранить изменения</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">Официальный ресурс INTERNAL AFFAIRS BUREAU</div>
+            <div class="copyright">© 2025. Все права защищены.</div>
+        </div>
+    </footer>
+
+    <script>
+        // Инициализация данных
+        let currentUser = null;
+        let cases = [];
+        let users = [];
+        let forumTopics = [];
+        let caseEntries = [];
+        let replies = [];
+        
+        // Загрузка данных из localStorage
+        function loadData() {
+            const savedCases = localStorage.getItem('iabCases');
+            const savedUsers = localStorage.getItem('iabUsers');
+            const savedTopics = localStorage.getItem('iabForumTopics');
+            const savedEntries = localStorage.getItem('iabCaseEntries');
+            const savedReplies = localStorage.getItem('iabReplies');
+            
+            if (savedCases) cases = JSON.parse(savedCases);
+            if (savedUsers) users = JSON.parse(savedUsers);
+            if (savedTopics) forumTopics = JSON.parse(savedTopics);
+            if (savedEntries) caseEntries = JSON.parse(savedEntries);
+            if (savedReplies) replies = JSON.parse(savedReplies);
+            
+            // Если нет пользователей, создаем начального админа
+            if (users.length === 0) {
+                users.push({
+                    id: 1,
+                    fullname: 'Администратор',
+                    username: 'admin',
+                    email: 'admin@iab.gov',
+                    role: 'admin',
+                    password: 'admin123',
+                    date: '01.01.2025'
+                });
+                saveUsers();
+            }
+            
+            // Если нет дел, создаем демо-дела
+            if (cases.length === 0) {
+                cases.push(
+                    {
+                        id: 1,
+                        title: 'Дело #2025-001',
+                        employee: 'Иванов И.И.',
+                        description: 'Нарушение процедуры задержания',
+                        date: '01.07.2025',
+                        status: 'active',
+                        category: 'investigation',
+                        priority: 'medium',
+                        responsible: 'Петров П.П.'
+                    },
+                    {
+                        id: 2,
+                        title: 'Дело #2025-002',
+                        employee: 'Петров П.П.',
+                        description: 'Несвоевременное оформление документов',
+                        date: '03.07.2025',
+                        status: 'pending',
+                        category: 'disciplinary',
+                        priority: 'low',
+                        responsible: 'Сидорова А.А.'
+                    },
+                    {
+                        id: 3,
+                        title: 'Дело #2025-003',
+                        employee: 'Сидоров С.С.',
+                        description: 'Нарушение дресс-кода',
+                        date: '05.07.2025',
+                        status: 'closed',
+                        category: 'complaint',
+                        priority: 'low',
+                        responsible: 'Иванов И.И.'
+                    }
+                );
+                saveCases();
+            }
+            
+            // Если нет тем форума, создаем демо-темы
+            if (forumTopics.length === 0) {
+                forumTopics.push(
+                    {
+                        id: 1,
+                        title: 'Нарушение процедуры задержания - дело #2025-001',
+                        author: 'Иванов И.И.',
+                        date: '15.07.2025 14:30',
+                        content: 'Сотрудник: Петров П.П.\nОписание: Нарушение процедуры задержания при проведении спецоперации в центре города.\nСтатус: Активно',
+                        category: 'current-investigations',
+                        status: 'open'
+                    },
+                    {
+                        id: 2,
+                        title: 'Несвоевременное оформление документов - дело #2025-002',
+                        author: 'Сидорова А.А.',
+                        date: '14.07.2025 10:15',
+                        content: 'Сотрудник: Козлов Д.Д.\nОписание: Несвоевременное оформление протоколов задержания в течение 3 рабочих дней.\nСтатус: На рассмотрении',
+                        category: 'disciplinary-investigations',
+                        status: 'open'
+                    }
+                );
+                saveForumTopics();
+            }
+            
+            // Если нет записей в делах, создаем демо-записи
+            if (caseEntries.length === 0) {
+                caseEntries.push(
+                    {
+                        id: 1,
+                        caseId: 1,
+                        type: 'evidence',
+                        content: 'Видеозапись с камеры наблюдения: сотрудник превышает полномочия при задержании',
+                        date: '02.07.2025 10:30',
+                        author: 'Петров П.П.'
+                    },
+                    {
+                        id: 2,
+                        caseId: 1,
+                        type: 'witness',
+                        content: 'Показания свидетеля: сотрудник вел себя агрессивно и использовал ненормативную лексику',
+                        date: '03.07.2025 14:15',
+                        author: 'Сидорова А.А.'
+                    }
+                );
+                saveCaseEntries();
+            }
+            
+            // Если нет ответов на форуме, создаем демо-ответы
+            if (replies.length === 0) {
+                replies.push(
+                    {
+                        id: 1,
+                        topicId: 1,
+                        author: 'Петров П.П.',
+                        date: '15.07.2025 15:45',
+                        content: 'Прошу предоставить дополнительные материалы по делу для ознакомления.'
+                    },
+                    {
+                        id: 2,
+                        topicId: 1,
+                        author: 'Иванов И.И.',
+                        date: '15.07.2025 16:30',
+                        content: 'Все материалы будут предоставлены в течение рабочего дня.'
+                    }
+                );
+                saveReplies();
+            }
+            
+            // Отображаем данные
+            renderCases();
+            renderUsers();
+            renderForumTopics();
+            renderForumTabs();
+        }
+        
+        // Сохранение данных в localStorage
+        function saveCases() {
+            localStorage.setItem('iabCases', JSON.stringify(cases));
+        }
+        
+        function saveUsers() {
+            localStorage.setItem('iabUsers', JSON.stringify(users));
+        }
+        
+        function saveForumTopics() {
+            localStorage.setItem('iabForumTopics', JSON.stringify(forumTopics));
+        }
+        
+        function saveCaseEntries() {
+            localStorage.setItem('iabCaseEntries', JSON.stringify(caseEntries));
+        }
+        
+        function saveReplies() {
+            localStorage.setItem('iabReplies', JSON.stringify(replies));
+        }
+        
+        // Отрисовка списка дел
+        function renderCases() {
+            const container = document.getElementById('casesContainer');
+            container.innerHTML = '';
+            
+            const statusFilter = document.getElementById('caseStatusFilter').value;
+            const searchTerm = document.getElementById('caseSearch').value.toLowerCase();
+            
+            const filteredCases = cases.filter(caseItem => {
+                const matchesStatus = statusFilter === 'all' || caseItem.status === statusFilter;
+                const matchesSearch = caseItem.title.toLowerCase().includes(searchTerm) || 
+                                     caseItem.employee.toLowerCase().includes(searchTerm) ||
+                                     caseItem.description.toLowerCase().includes(searchTerm);
+                return matchesStatus && matchesSearch;
+            });
+            
+            filteredCases.forEach(caseItem => {
+                const statusClass = caseItem.status === 'active' ? 'active' : 
+                                  caseItem.status === 'pending' ? 'pending' : 'closed';
+                const statusText = caseItem.status === 'active' ? 'Активно' : 
+                                  caseItem.status === 'pending' ? 'На рассмотрении' : 'Закрыто';
+                
+                const caseElement = document.createElement('div');
+                caseElement.className = 'case-item';
+                caseElement.innerHTML = `
+                    <div class="case-header">
+                        <h3>${caseItem.title}</h3>
+                        <span class="case-status ${statusClass}">${statusText}</span>
+                    </div>
+                    <div class="case-content">
+                        <p><strong>Сотрудник:</strong> ${caseItem.employee}</p>
+                        <p><strong>Описание:</strong> ${caseItem.description}</p>
+                        <p><strong>Дата начала:</strong> ${caseItem.date}</p>
+                    </div>
+                    <div class="case-actions">
+                        <button class="btn btn-sm edit-case" data-id="${caseItem.id}"><i class="fas fa-edit"></i> Редактировать</button>
+                        <button class="btn btn-sm btn-accent view-case" data-id="${caseItem.id}"><i class="fas fa-eye"></i> Просмотр</button>
+                        <button class="btn btn-sm btn-success close-case" data-id="${caseItem.id}"><i class="fas fa-check-circle"></i> Закрыть</button>
+                        <button class="btn btn-sm btn-danger delete-case" data-id="${caseItem.id}"><i class="fas fa-trash"></i> Удалить</button>
+                    </div>
+                `;
+                container.appendChild(caseElement);
+            });
+            
+            // Навешиваем обработчики событий
+            document.querySelectorAll('.edit-case').forEach(btn => {
+                btn.addEventListener('click', () => editCase(btn.dataset.id));
+            });
+            
+            document.querySelectorAll('.delete-case').forEach(btn => {
+                btn.addEventListener('click', () => deleteCase(btn.dataset.id));
+            });
+            
+            document.querySelectorAll('.view-case').forEach(btn => {
+                btn.addEventListener('click', () => viewCase(btn.dataset.id));
+            });
+            
+            document.querySelectorAll('.close-case').forEach(btn => {
+                btn.addEventListener('click', () => closeCase(btn.dataset.id));
+            });
+        }
+        
+        // Отрисовка списка пользователей
+        function renderUsers() {
+            const container = document.getElementById('usersContainer');
+            container.innerHTML = '';
+            
+            const roleFilter = document.getElementById('userRoleFilter').value;
+            const searchTerm = document.getElementById('userSearch').value.toLowerCase();
+            
+            const filteredUsers = users.filter(user => {
+                const matchesRole = roleFilter === 'all' || user.role === roleFilter;
+                const matchesSearch = user.fullname.toLowerCase().includes(searchTerm) || 
+                                      user.username.toLowerCase().includes(searchTerm) ||
+                                      user.email.toLowerCase().includes(searchTerm);
+                return matchesRole && matchesSearch;
+            });
+            
+            filteredUsers.forEach(user => {
+                const roleIcon = user.role === 'owner' ? 'fa-crown' : 
+                                user.role === 'admin' ? 'fa-shield-alt' : 
+                                user.role === 'moderator' ? 'fa-user-shield' : 'fa-user';
+                const roleText = user.role === 'owner' ? 'Владелец' : 
+                                user.role === 'admin' ? 'Администратор' : 
+                                user.role === 'moderator' ? 'Модератор' : 'Пользователь';
+                
+                const userElement = document.createElement('div');
+                userElement.className = 'user-item';
+                userElement.innerHTML = `
+                    <div class="user-avatar">
+                        <i class="fas ${roleIcon}"></i>
+                    </div>
+                    <div class="user-info">
+                        <h3>${user.fullname} (${roleText})</h3>
+                        <p>Дата регистрации: ${user.date}</p>
+                    </div>
+                    <div class="user-actions">
+                        <button class="btn btn-sm edit-user" data-id="${user.id}"><i class="fas fa-edit"></i> Редактировать</button>
+                        <button class="btn btn-sm btn-danger delete-user" data-id="${user.id}"><i class="fas fa-trash"></i> Удалить</button>
+                    </div>
+                `;
+                container.appendChild(userElement);
+            });
+            
+            // Навешиваем обработчики событий
+            document.querySelectorAll('.edit-user').forEach(btn => {
+                btn.addEventListener('click', () => editUser(btn.dataset.id));
+            });
+            
+            document.querySelectorAll('.delete-user').forEach(btn => {
+                btn.addEventListener('click', () => deleteUser(btn.dataset.id));
+            });
+        }
+        
+        // Отрисовка тем форума по категориям
+        function renderForumTopics() {
+            const categories = [
+                'current-investigations',
+                'employee-cases',
+                'disciplinary-investigations',
+                'current-decrees',
+                'disciplinary-measures',
+                'approved-decisions',
+                'completed-investigations',
+                'suspended-investigations',
+                'historical-investigations'
+            ];
+            
+            categories.forEach(category => {
+                const container = document.getElementById(category);
+                if (!container) return;
+                
+                container.innerHTML = '';
+                
+                const filteredTopics = forumTopics.filter(topic => topic.category === category);
+                
+                if (filteredTopics.length === 0) {
+                    container.innerHTML = '<p>Нет тем в этой категории</p>';
+                    return;
+                }
+                
+                filteredTopics.forEach(topic => {
+                    const topicElement = document.createElement('div');
+                    topicElement.className = 'topic-item';
+                    topicElement.innerHTML = `
+                        <div class="topic-header">
+                            <div class="topic-author">${topic.author}</div>
+                            <div class="topic-date">${topic.date}</div>
+                        </div>
+                        <h3>${topic.title}</h3>
+                        <div class="topic-content">
+                            <p>${topic.content.replace(/\n/g, '<br>')}</p>
+                        </div>
+                        <div class="topic-actions">
+                            <button class="btn btn-sm view-topic" data-id="${topic.id}">
+                                <i class="fas fa-eye"></i> Просмотр
+                            </button>
+                            <button class="btn btn-sm edit-topic" data-id="${topic.id}">
+                                <i class="fas fa-edit"></i> Редактировать
+                            </button>
+                            <div class="move-dropdown">
+                                <button class="btn btn-sm move-topic" data-id="${topic.id}">
+                                    <i class="fas fa-arrows-alt"></i> Переместить
+                                </button>
+                                <div class="move-options">
+                                    <a class="move-option" data-category="current-investigations">Кейс-Файл › Текущие</a>
+                                    <a class="move-option" data-category="employee-cases">Кейс-Файл › Дела сотрудников</a>
+                                    <a class="move-option" data-category="disciplinary-investigations">Кейс-Файл › Дисциплинарные</a>
+                                    <a class="move-option" data-category="current-decrees">Постановления › Текущие</a>
+                                    <a class="move-option" data-category="disciplinary-measures">Постановления › Дисциплинарные</a>
+                                    <a class="move-option" data-category="approved-decisions">Постановления › Решения</a>
+                                    <a class="move-option" data-category="completed-investigations">Архив › Завершенные</a>
+                                    <a class="move-option" data-category="suspended-investigations">Архив › Приостановленные</a>
+                                    <a class="move-option" data-category="historical-investigations">Архив › Исторические</a>
+                                </div>
+                            </div>
+                            <button class="btn btn-sm btn-danger delete-topic" data-id="${topic.id}">
+                                <i class="fas fa-trash"></i> Удалить
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(topicElement);
+                });
+                
+                // Навешиваем обработчики событий для тем форума
+                document.querySelectorAll('.edit-topic').forEach(btn => {
+                    btn.addEventListener('click', () => editTopic(btn.dataset.id));
+                });
+                
+                document.querySelectorAll('.delete-topic').forEach(btn => {
+                    btn.addEventListener('click', () => deleteTopic(btn.dataset.id));
+                });
+                
+                document.querySelectorAll('.view-topic').forEach(btn => {
+                    btn.addEventListener('click', () => viewTopic(btn.dataset.id));
+                });
+                
+                document.querySelectorAll('.move-topic').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const dropdown = this.nextElementSibling;
+                        dropdown.classList.toggle('show');
+                    });
+                });
+                
+                document.querySelectorAll('.move-option').forEach(option => {
+                    option.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const topicId = this.closest('.move-dropdown').querySelector('.move-topic').dataset.id;
+                        const newCategory = this.dataset.category;
+                        moveTopic(topicId, newCategory);
+                    });
+                });
+            });
+        }
+        
+        // Отрисовка вкладок форума
+        function renderForumTabs() {
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Удаляем активный класс у всех вкладок и контента
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    // Добавляем активный класс текущей вкладке и контенту
+                    tab.classList.add('active');
+                    document.getElementById(`${tab.dataset.tab}-tab`).classList.add('active');
+                });
+            });
+        }
+        
+        // Просмотр деталей дела
+        function viewCase(caseId) {
+            const caseItem = cases.find(c => c.id == caseId);
+            if (!caseItem) return;
+            
+            // Заполняем информацию о деле
+            document.getElementById('caseDetailsTitle').textContent = caseItem.title;
+            document.getElementById('caseDetailsEmployee').textContent = caseItem.employee;
+            document.getElementById('caseDetailsDate').textContent = caseItem.date;
+            document.getElementById('caseDetailsCategory').textContent = getCaseCategoryName(caseItem.category);
+            document.getElementById('caseDetailsStatus').innerHTML = getStatusBadge(caseItem.status);
+            document.getElementById('caseDetailsPriority').textContent = getPriorityName(caseItem.priority);
+            document.getElementById('caseDetailsResponsible').textContent = caseItem.responsible;
+            document.getElementById('caseDetailsDescription').textContent = caseItem.description;
+            
+            // Заполняем хронологию
+            const timelineContainer = document.getElementById('caseTimeline');
+            timelineContainer.innerHTML = '';
+            
+            const caseEntriesForCase = caseEntries.filter(entry => entry.caseId == caseId);
+            caseEntriesForCase.forEach(entry => {
+                const timelineItem = document.createElement('div');
+                timelineItem.className = 'timeline-item';
+                timelineItem.innerHTML = `
+                    <div class="timeline-date">${entry.date}</div>
+                    <div class="timeline-content">
+                        <strong>${getEntryTypeName(entry.type)}</strong> от ${entry.author}<br>
+                        ${entry.content}
+                    </div>
+                `;
+                timelineContainer.appendChild(timelineItem);
+            });
+            
+            // Сохраняем ID дела для формы
+            document.getElementById('caseEntryForm').dataset.caseId = caseId;
+            
+            // Переходим на страницу деталей дела
+            showPage('case-details');
+        }
+        
+        // Просмотр темы форума
+        function viewTopic(topicId) {
+            const topic = forumTopics.find(t => t.id == topicId);
+            if (!topic) return;
+            
+            // Заполняем информацию о теме
+            document.getElementById('topicDetailsTitle').textContent = topic.title;
+            document.getElementById('topicAuthor').textContent = topic.author;
+            document.getElementById('topicDate').textContent = topic.date;
+            document.getElementById('topicContentDetails').innerHTML = topic.content.replace(/\n/g, '<br>');
+            
+            // Заполняем ответы
+            const repliesContainer = document.getElementById('repliesContainer');
+            repliesContainer.innerHTML = '';
+            
+            const topicReplies = replies.filter(reply => reply.topicId == topicId);
+            if (topicReplies.length === 0) {
+                repliesContainer.innerHTML = '<p>Нет ответов в этой теме</p>';
+            } else {
+                topicReplies.forEach(reply => {
+                    const replyElement = document.createElement('div');
+                    replyElement.className = 'reply';
+                    replyElement.innerHTML = `
+                        <div class="reply-header">
+                            <div class="reply-author">${reply.author}</div>
+                            <div class="reply-date">${reply.date}</div>
+                        </div>
+                        <div class="reply-content">${reply.content}</div>
+                    `;
+                    repliesContainer.appendChild(replyElement);
+                });
+            }
+            
+            // Сохраняем ID темы для формы ответа
+            document.getElementById('replyForm').dataset.topicId = topicId;
+            
+            // Переходим на страницу темы
+            showPage('topic-details');
+        }
+        
+        // Перемещение темы форума
+        function moveTopic(topicId, newCategory) {
+            const topic = forumTopics.find(t => t.id == topicId);
+            if (topic) {
+                topic.category = newCategory;
+                saveForumTopics();
+                renderForumTopics();
+                alert(`Тема перемещена в категорию: ${getCategoryName(newCategory)}`);
+            }
+        }
+        
+        // Получение названия категории
+        function getCategoryName(category) {
+            const names = {
+                'current-investigations': 'Текущие Расследования',
+                'employee-cases': 'Дела Сотрудников',
+                'disciplinary-investigations': 'Дисциплинарные Расследования',
+                'current-decrees': 'Текущие постановления',
+                'disciplinary-measures': 'Дисциплинарные меры',
+                'approved-decisions': 'Утвержденные решения',
+                'completed-investigations': 'Завершенные Расследования',
+                'suspended-investigations': 'Приостановленные Расследования',
+                'historical-investigations': 'Исторические устаревшие Расследования'
+            };
+            return names[category] || category;
+        }
+        
+        // Получение названия категории дела
+        function getCaseCategoryName(category) {
+            const names = {
+                'investigation': 'Расследование',
+                'disciplinary': 'Дисциплинарное дело',
+                'complaint': 'Жалоба'
+            };
+            return names[category] || category;
+        }
+        
+        // Получение названия приоритета
+        function getPriorityName(priority) {
+            const names = {
+                'high': 'Высокий',
+                'medium': 'Средний',
+                'low': 'Низкий'
+            };
+            return names[priority] || priority;
+        }
+        
+        // Получение названия типа записи
+        function getEntryTypeName(type) {
+            const names = {
+                'note': 'Заметка',
+                'evidence': 'Доказательство',
+                'witness': 'Показания свидетеля',
+                'decision': 'Решение'
+            };
+            return names[type] || type;
+        }
+        
+        // Получение бейджа статуса
+        function getStatusBadge(status) {
+            const statusClass = status === 'active' ? 'active' : 
+                              status === 'pending' ? 'pending' : 'closed';
+            const statusText = status === 'active' ? 'Активно' : 
+                              status === 'pending' ? 'На рассмотрении' : 'Закрыто';
+            
+            return `<span class="case-status ${statusClass}">${statusText}</span>`;
+        }
+        
+        // Редактирование темы форума
+        function editTopic(topicId) {
+            const topic = forumTopics.find(t => t.id == topicId);
+            if (topic) {
+                document.getElementById('editTopicId').value = topic.id;
+                document.getElementById('editTopicTitle').value = topic.title;
+                document.getElementById('editTopicContent').value = topic.content;
+                document.getElementById('editTopicModal').classList.add('show');
+            }
+        }
+        
+        // Удаление темы форума
+        function deleteTopic(topicId) {
+            if (confirm('Вы уверены, что хотите удалить эту тему?')) {
+                forumTopics = forumTopics.filter(t => t.id != topicId);
+                saveForumTopics();
+                renderForumTopics();
+                alert('Тема успешно удалена!');
+            }
+        }
+        
+        // Редактирование дела
+        function editCase(id) {
+            const caseItem = cases.find(c => c.id == id);
+            if (!caseItem) return;
+            
+            document.getElementById('caseFormTitle').textContent = 'Редактировать дело';
+            document.getElementById('caseTitle').value = caseItem.title;
+            document.getElementById('caseEmployee').value = caseItem.employee;
+            document.getElementById('caseDescription').value = caseItem.description;
+            document.getElementById('caseCategory').value = caseItem.category;
+            document.getElementById('casePriority').value = caseItem.priority || 'medium';
+            document.getElementById('caseStatus').value = caseItem.status || 'active';
+            
+            document.getElementById('caseFormContainer').style.display = 'block';
+            document.getElementById('casesContainer').style.display = 'none';
+            
+            // Сохраняем ID дела для обновления
+            document.getElementById('caseForm').dataset.id = id;
+        }
+        
+        // Закрытие дела
+        function closeCase(id) {
+            if (confirm('Вы уверены, что хотите закрыть это дело?')) {
+                const caseIndex = cases.findIndex(c => c.id == id);
+                if (caseIndex !== -1) {
+                    cases[caseIndex].status = 'closed';
+                    saveCases();
+                    renderCases();
+                    
+                    // Добавляем запись о закрытии дела
+                    const newEntry = {
+                        id: caseEntries.length + 1,
+                        caseId: id,
+                        type: 'decision',
+                        content: 'Дело закрыто',
+                        date: new Date().toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                        author: currentUser?.fullname || 'Система'
+                    };
+                    caseEntries.push(newEntry);
+                    saveCaseEntries();
+                    
+                    alert('Дело успешно закрыто!');
+                }
+            }
+        }
+        
+        // Удаление дела
+        function deleteCase(id) {
+            if (confirm('Вы уверены, что хотите удалить это дело?')) {
+                cases = cases.filter(c => c.id != id);
+                saveCases();
+                renderCases();
+            }
+        }
+        
+        // Перемещение дела на форум
+        function moveToForum(id) {
+            const caseItem = cases.find(c => c.id == id);
+            if (!caseItem) return;
+            
+            const newTopic = {
+                id: forumTopics.length + 1,
+                title: caseItem.title,
+                author: currentUser?.fullname || 'Система',
+                date: new Date().toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                content: `Сотрудник: ${caseItem.employee}\nОписание: ${caseItem.description}\nСтатус: ${caseItem.status === 'active' ? 'Активно' : caseItem.status === 'pending' ? 'На рассмотрении' : 'Закрыто'}`,
+                category: 'current-investigations',
+                status: 'open'
+            };
+            
+            forumTopics.push(newTopic);
+            saveForumTopics();
+            renderForumTopics();
+            
+            alert(`Дело "${caseItem.title}" успешно перемещено на форум!`);
+        }
+        
+        // Редактирование пользователя
+        function editUser(id) {
+            const user = users.find(u => u.id == id);
+            if (!user) return;
+            
+            document.getElementById('userFormTitle').textContent = 'Редактировать пользователя';
+            document.getElementById('userFullname').value = user.fullname;
+            document.getElementById('userLogin').value = user.username;
+            document.getElementById('userEmail').value = user.email;
+            document.getElementById('userRole').value = user.role;
+            document.getElementById('userPassword').value = '';
+            document.getElementById('userConfirmPassword').value = '';
+            
+            document.getElementById('userFormContainer').style.display = 'block';
+            document.getElementById('usersContainer').style.display = 'none';
+            
+            // Сохраняем ID пользователя для обновления
+            document.getElementById('userForm').dataset.id = id;
+        }
+        
+        // Удаление пользователя
+        function deleteUser(id) {
+            if (confirm('Вы уверены, что хотите удалить этого пользователя?')) {
+                users = users.filter(u => u.id != id);
+                saveUsers();
+                renderUsers();
+            }
+        }
+        
+        // Вставка BBCode
+        function insertBBCode(tag) {
+            const textarea = document.getElementById('topicContent');
+            if (!textarea) return;
+            
+            const startTag = `[${tag}]`;
+            const endTag = `[/${tag}]`;
+            
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const selectedText = textarea.value.substring(start, end);
+            
+            textarea.value = textarea.value.substring(0, start) + 
+                             startTag + selectedText + endTag + 
+                             textarea.value.substring(end);
+            
+            textarea.focus();
+            textarea.setSelectionRange(start + startTag.length, start + startTag.length + selectedText.length);
+        }
+        
+        // Навигация
+        function initNavigation() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showPage(link.getAttribute('data-page'));
+                    
+                    // Обновить активную ссылку в навигации
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                });
+            });
+        }
+        
+        // Показать страницу
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page-content');
+            
+            // Скрыть все страницы
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Показать выбранную страницу
+            document.getElementById(`${pageId}-page`).classList.add('active');
+            
+            // Если открыта страница управления делами или пользователями, обновляем данные
+            if (pageId === 'case-management') {
+                renderCases();
+            } else if (pageId === 'users') {
+                renderUsers();
+            } else if (pageId === 'forum') {
+                renderForumTopics();
+                renderForumTabs();
+            }
+        }
+        
+        // Инициализация приложения
+        function initApp() {
+            // Загрузка данных
+            loadData();
+            
+            // Настройка навигации
+            initNavigation();
+            
+            // Theme Toggle
+            const themeToggle = document.getElementById('themeToggle');
+            const htmlElement = document.documentElement;
+            
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = htmlElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                htmlElement.setAttribute('data-theme', newTheme);
+                
+                // Update icon
+                themeToggle.innerHTML = newTheme === 'light' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+                
+                // Save preference
+                localStorage.setItem('theme', newTheme);
+            });
+            
+            // Check for saved theme preference
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                htmlElement.setAttribute('data-theme', savedTheme);
+                themeToggle.innerHTML = savedTheme === 'light' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            } else {
+                // Default to dark theme
+                htmlElement.setAttribute('data-theme', 'dark');
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            }
+            
+            // User Dropdown
+            const userBtn = document.getElementById('userBtn');
+            const userDropdown = document.getElementById('userDropdown');
+            
+            userBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                userDropdown.classList.toggle('show');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!userDropdown.contains(e.target) && !userBtn.contains(e.target)) {
+                    userDropdown.classList.remove('show');
+                }
+            });
+            
+            // Modal Handling
+            const loginBtn = document.getElementById('loginBtn');
+            const registerBtn = document.getElementById('registerBtn');
+            const loginModal = document.getElementById('loginModal');
+            const registerModal = document.getElementById('registerModal');
+            const editTopicModal = document.getElementById('editTopicModal');
+            const closeButtons = document.querySelectorAll('.close');
+            
+            // Login modal
+            loginBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                loginModal.classList.add('show');
+            });
+            
+            // Register modal
+            registerBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                registerModal.classList.add('show');
+            });
+            
+            // Close modals
+            closeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const modal = button.closest('.modal');
+                    modal.classList.remove('show');
+                });
+            });
+            
+            // Close modals when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target.classList.contains('modal')) {
+                    e.target.classList.remove('show');
+                }
+            });
+            
+            // Login form submission
+            document.getElementById('loginForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const username = document.getElementById('loginUsername').value;
+                const password = document.getElementById('loginPassword').value;
+                
+                // Простая проверка для демо
+                const user = users.find(u => u.username === username && u.password === password);
+                
+                if (user) {
+                    currentUser = user;
+                    
+                    // Update user interface
+                    const firstLetters = user.fullname.split(' ').map(n => n[0]).join('').toUpperCase();
+                    userBtn.innerHTML = `
+                        <div class="user-avatar">${firstLetters}</div>
+                        <span>${user.fullname}</span>
+                    `;
+                    
+                    // Update dropdown menu
+                    document.getElementById('loginBtn').style.display = 'none';
+                    document.getElementById('registerBtn').style.display = 'none';
+                    document.getElementById('profileBtn').style.display = 'block';
+                    document.getElementById('settingsBtn').style.display = 'block';
+                    document.getElementById('logoutBtn').style.display = 'block';
+                    
+                    // Show profile link in navigation
+                    document.querySelectorAll('.nav-link[data-page="profile"]').forEach(el => {
+                        el.style.display = 'block';
+                    });
+                    
+                    // Update profile page
+                    document.getElementById('profileUsername').value = user.username;
+                    document.getElementById('profileFullname').value = user.fullname;
+                    document.getElementById('profileEmail').value = user.email;
+                    document.getElementById('profileRole').value = user.role === 'owner' ? 'Владелец' : 
+                                                                  user.role === 'admin' ? 'Администратор' : 
+                                                                  user.role === 'moderator' ? 'Модератор' : 'Пользователь';
+                    
+                    loginModal.classList.remove('show');
+                    alert(`Добро пожаловать, ${user.fullname}!`);
+                } else {
+                    alert('Неверный логин или пароль!');
+                }
+            });
+            
+            // Register form submission
+            document.getElementById('registerForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const fullname = document.getElementById('regFullname').value;
+                const username = document.getElementById('regUsername').value;
+                const email = document.getElementById('regEmail').value;
+                const password = document.getElementById('regPassword').value;
+                const confirmPassword = document.getElementById('regConfirmPassword').value;
+                
+                if (password !== confirmPassword) {
+                    alert('Пароли не совпадают!');
+                    return;
+                }
+                
+                if (users.some(u => u.username === username)) {
+                    alert('Пользователь с таким логином уже существует!');
+                    return;
+                }
+                
+                const newUser = {
+                    id: users.length + 1,
+                    fullname,
+                    username,
+                    email,
+                    role: 'user',
+                    password,
+                    date: new Date().toLocaleDateString('ru-RU')
+                };
+                
+                users.push(newUser);
+                saveUsers();
+                
+                // Auto-login after registration
+                currentUser = newUser;
+                
+                // Update user interface
+                const firstLetters = fullname.split(' ').map(n => n[0]).join('').toUpperCase();
+                userBtn.innerHTML = `
+                    <div class="user-avatar">${firstLetters}</div>
+                    <span>${fullname}</span>
+                `;
+                
+                // Update dropdown menu
+                document.getElementById('loginBtn').style.display = 'none';
+                document.getElementById('registerBtn').style.display = 'none';
+                document.getElementById('profileBtn').style.display = 'block';
+                document.getElementById('settingsBtn').style.display = 'block';
+                document.getElementById('logoutBtn').style.display = 'block';
+                
+                // Show profile link in navigation
+                document.querySelectorAll('.nav-link[data-page="profile"]').forEach(el => {
+                    el.style.display = 'block';
+                });
+                
+                // Update profile page
+                document.getElementById('profileUsername').value = username;
+                document.getElementById('profileFullname').value = fullname;
+                document.getElementById('profileEmail').value = email;
+                document.getElementById('profileRole').value = 'Пользователь';
+                
+                registerModal.classList.remove('show');
+                alert(`Пользователь ${fullname} успешно зарегистрирован!`);
+            });
+            
+            // Logout functionality
+            document.getElementById('logoutBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                currentUser = null;
+                
+                // Reset user interface
+                userBtn.innerHTML = `
+                    <div class="user-avatar">Г</div>
+                    <span>Гость</span>
+                `;
+                
+                // Reset dropdown menu
+                document.getElementById('loginBtn').style.display = 'block';
+                document.getElementById('registerBtn').style.display = 'block';
+                document.getElementById('profileBtn').style.display = 'none';
+                document.getElementById('settingsBtn').style.display = 'none';
+                document.getElementById('logoutBtn').style.display = 'none';
+                
+                // Hide profile link in navigation
+                document.querySelectorAll('.nav-link[data-page="profile"]').forEach(el => {
+                    el.style.display = 'none';
+                });
+                
+                // Go to home page
+                showPage('home');
+                
+                alert('Вы успешно вышли из системы');
+            });
+            
+            // Profile form submission
+            document.getElementById('profileForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                alert('Настройки профиля сохранены!');
+            });
+            
+            // New case button
+            document.getElementById('newCaseBtn').addEventListener('click', () => {
+                document.getElementById('caseFormTitle').textContent = 'Создать новое дело';
+                document.getElementById('caseForm').reset();
+                document.getElementById('caseForm').removeAttribute('data-id');
+                
+                document.getElementById('caseFormContainer').style.display = 'block';
+                document.getElementById('casesContainer').style.display = 'none';
+            });
+            
+            // Cancel case form
+            document.getElementById('cancelCaseBtn').addEventListener('click', () => {
+                document.getElementById('caseFormContainer').style.display = 'none';
+                document.getElementById('casesContainer').style.display = 'grid';
+            });
+            
+            // Case form submission
+            document.getElementById('caseForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const id = document.getElementById('caseForm').dataset.id;
+                const title = document.getElementById('caseTitle').value;
+                const employee = document.getElementById('caseEmployee').value;
+                const description = document.getElementById('caseDescription').value;
+                const category = document.getElementById('caseCategory').value;
+                const priority = document.getElementById('casePriority').value;
+                const status = document.getElementById('caseStatus').value;
+                
+                if (id) {
+                    // Update existing case
+                    const caseIndex = cases.findIndex(c => c.id == id);
+                    if (caseIndex !== -1) {
+                        cases[caseIndex] = {
+                            ...cases[caseIndex],
+                            title,
+                            employee,
+                            description,
+                            category,
+                            priority,
+                            status
+                        };
+                    }
+                } else {
+                    // Create new case
+                    const newCase = {
+                        id: cases.length + 1,
+                        title,
+                        employee,
+                        description,
+                        date: new Date().toLocaleDateString('ru-RU'),
+                        status,
+                        category,
+                        priority,
+                        responsible: currentUser?.fullname || 'Система'
+                    };
+                    cases.push(newCase);
+                }
+                
+                saveCases();
+                renderCases();
+                
+                document.getElementById('caseFormContainer').style.display = 'none';
+                document.getElementById('casesContainer').style.display = 'grid';
+                
+                alert(id ? 'Дело обновлено!' : 'Новое дело создано!');
+            });
+            
+            // Add user button
+            document.getElementById('addUserBtn').addEventListener('click', () => {
+                document.getElementById('userFormTitle').textContent = 'Добавить пользователя';
+                document.getElementById('userForm').reset();
+                document.getElementById('userForm').removeAttribute('data-id');
+                
+                document.getElementById('userFormContainer').style.display = 'block';
+                document.getElementById('usersContainer').style.display = 'none';
+            });
+            
+            // Cancel user form
+            document.getElementById('cancelUserBtn').addEventListener('click', () => {
+                document.getElementById('userFormContainer').style.display = 'none';
+                document.getElementById('usersContainer').style.display = 'flex';
+            });
+            
+            // User form submission
+            document.getElementById('userForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const id = document.getElementById('userForm').dataset.id;
+                const fullname = document.getElementById('userFullname').value;
+                const username = document.getElementById('userLogin').value;
+                const email = document.getElementById('userEmail').value;
+                const role = document.getElementById('userRole').value;
+                const password = document.getElementById('userPassword').value;
+                const confirmPassword = document.getElementById('userConfirmPassword').value;
+                
+                if (password !== confirmPassword) {
+                    alert('Пароли не совпадают!');
+                    return;
+                }
+                
+                if (id) {
+                    // Update existing user
+                    const userIndex = users.findIndex(u => u.id == id);
+                    if (userIndex !== -1) {
+                        users[userIndex] = {
+                            ...users[userIndex],
+                            fullname,
+                            username,
+                            email,
+                            role,
+                            password: password || users[userIndex].password
+                        };
+                    }
+                } else {
+                    // Create new user
+                    if (users.some(u => u.username === username)) {
+                        alert('Пользователь с таким логином уже существует!');
+                        return;
+                    }
+                    
+                    const newUser = {
+                        id: users.length + 1,
+                        fullname,
+                        username,
+                        email,
+                        role,
+                        password,
+                        date: new Date().toLocaleDateString('ru-RU')
+                    };
+                    users.push(newUser);
+                }
+                
+                saveUsers();
+                renderUsers();
+                
+                document.getElementById('userFormContainer').style.display = 'none';
+                document.getElementById('usersContainer').style.display = 'flex';
+                
+                alert(id ? 'Пользователь обновлен!' : 'Новый пользователь добавлен!');
+            });
+            
+            // Forum topic form submission
+            document.getElementById('topicForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const title = document.getElementById('topicTitle').value;
+                const category = document.getElementById('topicCategory').value;
+                const content = document.getElementById('topicContent').value;
+                
+                const newTopic = {
+                    id: forumTopics.length + 1,
+                    title,
+                    author: currentUser?.fullname || 'Гость',
+                    date: new Date().toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                    content,
+                    category,
+                    status: 'open'
+                };
+                
+                forumTopics.push(newTopic);
+                saveForumTopics();
+                renderForumTopics();
+                
+                document.getElementById('topicForm').reset();
+                alert('Новая тема создана на форуме!');
+            });
+            
+            // Edit topic form submission
+            document.getElementById('editTopicForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const topicId = document.getElementById('editTopicId').value;
+                const title = document.getElementById('editTopicTitle').value;
+                const content = document.getElementById('editTopicContent').value;
+                
+                const topic = forumTopics.find(t => t.id == topicId);
+                if (topic) {
+                    topic.title = title;
+                    topic.content = content;
+                    saveForumTopics();
+                    renderForumTopics();
+                    document.getElementById('editTopicModal').classList.remove('show');
+                    alert('Тема успешно обновлена!');
+                }
+            });
+            
+            // Profile button in dropdown
+            document.getElementById('profileBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                showPage('profile');
+            });
+            
+            // Case entry form submission
+            document.getElementById('caseEntryForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const caseId = document.getElementById('caseEntryForm').dataset.caseId;
+                const entryType = document.getElementById('entryType').value;
+                const entryContent = document.getElementById('entryContent').value;
+                
+                const newEntry = {
+                    id: caseEntries.length + 1,
+                    caseId: parseInt(caseId),
+                    type: entryType,
+                    content: entryContent,
+                    date: new Date().toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                    author: currentUser?.fullname || 'Система'
+                };
+                
+                caseEntries.push(newEntry);
+                saveCaseEntries();
+                
+                // Update timeline
+                const timelineContainer = document.getElementById('caseTimeline');
+                const timelineItem = document.createElement('div');
+                timelineItem.className = 'timeline-item';
+                timelineItem.innerHTML = `
+                    <div class="timeline-date">${newEntry.date}</div>
+                    <div class="timeline-content">
+                        <strong>${getEntryTypeName(newEntry.type)}</strong> от ${newEntry.author}<br>
+                        ${newEntry.content}
+                    </div>
+                `;
+                timelineContainer.appendChild(timelineItem);
+                
+                document.getElementById('entryContent').value = '';
+                alert('Запись добавлена в дело!');
+            });
+            
+            // Reply form submission
+            document.getElementById('replyForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const topicId = document.getElementById('replyForm').dataset.topicId;
+                const replyContent = document.getElementById('replyContent').value;
+                
+                const newReply = {
+                    id: replies.length + 1,
+                    topicId: parseInt(topicId),
+                    author: currentUser?.fullname || 'Гость',
+                    date: new Date().toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                    content: replyContent
+                };
+                
+                replies.push(newReply);
+                saveReplies();
+                
+                // Update replies list
+                const repliesContainer = document.getElementById('repliesContainer');
+                const replyElement = document.createElement('div');
+                replyElement.className = 'reply';
+                replyElement.innerHTML = `
+                    <div class="reply-header">
+                        <div class="reply-author">${newReply.author}</div>
+                        <div class="reply-date">${newReply.date}</div>
+                    </div>
+                    <div class="reply-content">${newReply.content}</div>
+                `;
+                repliesContainer.appendChild(replyElement);
+                
+                document.getElementById('replyContent').value = '';
+                alert('Ответ добавлен в тему!');
+            });
+            
+            // Case status filter change
+            document.getElementById('caseStatusFilter').addEventListener('change', renderCases);
+            
+            // Case search input
+            document.getElementById('caseSearch').addEventListener('input', renderCases);
+            
+            // User role filter change
+            document.getElementById('userRoleFilter').addEventListener('change', renderUsers);
+            
+            // User search input
+            document.getElementById('userSearch').addEventListener('input', renderUsers);
+        }
+        
+        // Запуск приложения при загрузке страницы
+        window.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
