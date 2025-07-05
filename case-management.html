@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление Делами</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <!-- Same header as index.html -->
+    </header>
+
+    <main class="case-management">
+        <h1 class="section-title">Управление Делами</h1>
+        
+        <div class="case-controls">
+            <button class="btn" id="newCaseBtn"><i class="fas fa-plus"></i> Новое дело</button>
+            <div class="case-filters">
+                <select id="caseStatusFilter">
+                    <option value="all">Все статусы</option>
+                    <option value="active">Активные</option>
+                    <option value="pending">На рассмотрении</option>
+                    <option value="closed">Закрытые</option>
+                </select>
+                <input type="text" id="caseSearch" placeholder="Поиск по делам...">
+            </div>
+        </div>
+        
+        <div class="cases-list">
+            <div class="case-item">
+                <div class="case-header">
+                    <h3>Дело #2025-001</h3>
+                    <span class="case-status active">Активно</span>
+                </div>
+                <div class="case-content">
+                    <p><strong>Сотрудник:</strong> Иванов И.И.</p>
+                    <p><strong>Описание:</strong> Нарушение процедуры задержания</p>
+                    <p><strong>Дата начала:</strong> 01.07.2025</p>
+                </div>
+                <div class="case-actions">
+                    <button class="btn btn-sm"><i class="fas fa-edit"></i> Редактировать</button>
+                    <button class="btn btn-sm btn-accent"><i class="fas fa-share"></i> На форум</button>
+                    <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Удалить</button>
+                </div>
+            </div>
+            
+            <div class="case-item">
+                <div class="case-header">
+                    <h3>Дело #2025-002</h3>
+                    <span class="case-status pending">На рассмотрении</span>
+                </div>
+                <div class="case-content">
+                    <p><strong>Сотрудник:</strong> Петров П.П.</p>
+                    <p><strong>Описание:</strong> Несвоевременное оформление документов</p>
+                    <p><strong>Дата начала:</strong> 03.07.2025</p>
+                </div>
+                <div class="case-actions">
+                    <button class="btn btn-sm"><i class="fas fa-edit"></i> Редактировать</button>
+                    <button class="btn btn-sm btn-accent"><i class="fas fa-share"></i> На форум</button>
+                    <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Удалить</button>
+                </div>
+            </div>
+            
+            <div class="case-item">
+                <div class="case-header">
+                    <h3>Дело #2025-003</h3>
+                    <span class="case-status closed">Закрыто</span>
+                </div>
+                <div class="case-content">
+                    <p><strong>Сотрудник:</strong> Сидоров С.С.</p>
+                    <p><strong>Описание:</strong> Нарушение дресс-кода</p>
+                    <p><strong>Дата начала:</strong> 05.07.2025</p>
+                    <p><strong>Дата закрытия:</strong> 10.07.2025</p>
+                </div>
+                <div class="case-actions">
+                    <button class="btn btn-sm"><i class="fas fa-eye"></i> Просмотреть</button>
+                    <button class="btn btn-sm"><i class="fas fa-archive"></i> В архив</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- New Case Modal -->
+        <div class="modal" id="newCaseModal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Создать новое дело</h2>
+                <form id="caseForm">
+                    <div class="form-group">
+                        <label for="caseTitle">Название дела:</label>
+                        <input type="text" id="caseTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="caseEmployee">Сотрудник:</label>
+                        <input type="text" id="caseEmployee" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="caseDescription">Описание:</label>
+                        <textarea id="caseDescription" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="caseCategory">Категория:</label>
+                        <select id="caseCategory" required>
+                            <option value="investigation">Расследование</option>
+                            <option value="disciplinary">Дисциплинарное дело</option>
+                            <option value="complaint">Жалоба</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="casePriority">Приоритет:</label>
+                        <select id="casePriority" required>
+                            <option value="high">Высокий</option>
+                            <option value="medium" selected>Средний</option>
+                            <option value="low">Низкий</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn">Создать дело</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <!-- Same footer as index.html -->
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/case-management.js"></script>
+</body>
+</html>

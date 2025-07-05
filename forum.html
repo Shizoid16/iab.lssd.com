@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форум БВР</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <!-- Same header as index.html -->
+    </header>
+
+    <main class="forum-container">
+        <h1 class="section-title">Форум Бюро Внутренних Расследований</h1>
+        
+        <!-- BBCode Toolbar -->
+        <div class="bbcode-toolbar">
+            <button title="Жирный" onclick="insertBBCode('b')"><b>B</b></button>
+            <button title="Курсив" onclick="insertBBCode('i')"><i>I</i></button>
+            <button title="Подчеркнутый" onclick="insertBBCode('u')"><u>U</u></button>
+            <button title="Ссылка" onclick="insertBBCode('url')">URL</button>
+            <button title="Изображение" onclick="insertBBCode('img')">IMG</button>
+            <button title="Цитата" onclick="insertBBCode('quote')">QUOTE</button>
+            <button title="Список" onclick="insertBBCode('list')">LIST</button>
+            <button title="Код" onclick="insertBBCode('code')">CODE</button>
+            <button title="Цвет" onclick="insertBBCode('color')">COLOR</button>
+        </div>
+        
+        <!-- Forum Categories -->
+        <div class="forum-categories">
+            <!-- Кейс-Файл -->
+            <div class="forum-category">
+                <h2>Кейс-Файл</h2>
+                <div class="forum-sections">
+                    <div class="forum-section">
+                        <i class="fas fa-folder-open"></i>
+                        <div>
+                            <h3>Текущие Расследования</h3>
+                            <p>Активные расследования по сотрудникам</p>
+                        </div>
+                    </div>
+                    <div class="forum-section">
+                        <i class="fas fa-user-shield"></i>
+                        <div>
+                            <h3>Дела Сотрудников</h3>
+                            <p>Индивидуальные дела сотрудников департамента</p>
+                        </div>
+                    </div>
+                    <div class="forum-section">
+                        <i class="fas fa-gavel"></i>
+                        <div>
+                            <h3>Дисциплинарные Расследования</h3>
+                            <p>Расследования нарушений дисциплины</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Постановления -->
+            <div class="forum-category">
+                <h2>Постановления</h2>
+                <div class="forum-sections">
+                    <div class="forum-section">
+                        <i class="fas fa-file-contract"></i>
+                        <div>
+                            <h3>Текущие постановления</h3>
+                            <p>Актуальные постановления руководства</p>
+                        </div>
+                    </div>
+                    <div class="forum-section">
+                        <i class="fas fa-balance-scale"></i>
+                        <div>
+                            <h3>Дисциплинарные меры</h3>
+                            <p>Меры дисциплинарного воздействия</p>
+                        </div>
+                    </div>
+                    <div class="forum-section">
+                        <i class="fas fa-stamp"></i>
+                        <div>
+                            <h3>Утвержденные решения</h3>
+                            <p>Официально утвержденные решения по делам</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Архивы -->
+            <div class="forum-archives">
+                <!-- Архив Кейс-Файлов -->
+                <div class="archive-category">
+                    <h2>Архив Кейс-Файлов</h2>
+                    <div class="archive-sections">
+                        <div class="archive-section">Завершенные Расследования</div>
+                        <div class="archive-section">Приостановленные Расследования</div>
+                        <div class="archive-section">Исторические устаревшие Расследования</div>
+                    </div>
+                </div>
+                
+                <!-- Архив Постановлений -->
+                <div class="archive-category">
+                    <h2>Архив Постановлений</h2>
+                    <div class="archive-sections">
+                        <div class="archive-section">Архив постановлений</div>
+                        <div class="archive-section">Исторические документы</div>
+                    </div>
+                </div>
+                
+                <!-- Архив Анонимных Жалоб -->
+                <div class="archive-category">
+                    <h2>Архив Анонимных Жалоб</h2>
+                    <div class="archive-sections">
+                        <div class="archive-section">Обработанные жалобы</div>
+                        <div class="archive-section">Завершенные расследования</div>
+                        <div class="archive-section">Отклоненные обращения</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- New Topic Form -->
+        <div class="new-topic-form">
+            <h2>Создать новую тему</h2>
+            <form id="topicForm">
+                <div class="form-group">
+                    <label for="topicTitle">Заголовок темы:</label>
+                    <input type="text" id="topicTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="topicCategory">Категория:</label>
+                    <select id="topicCategory" required>
+                        <option value="">Выберите категорию</option>
+                        <option value="current">Текущие Расследования</option>
+                        <option value="employees">Дела Сотрудников</option>
+                        <option value="disciplinary">Дисциплинарные Расследования</option>
+                        <!-- Other options -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="topicContent">Содержание:</label>
+                    <textarea id="topicContent" rows="10" required></textarea>
+                </div>
+                <button type="submit" class="btn">Создать тему</button>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <!-- Same footer as index.html -->
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/forum.js"></script>
+</body>
+</html>
